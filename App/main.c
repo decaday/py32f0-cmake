@@ -22,9 +22,8 @@ int main(void)
 
     while (1)
     {
-        HAL_Delay(1000);
+        HAL_Delay(500);
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);
-        printf("echo\r\n");
     }
 
   while (1)

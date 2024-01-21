@@ -4,6 +4,20 @@
   * @author  MCU Application Team
   * @brief   HAL configuration file.
   ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) Puya Semiconductor Co.
+  * All rights reserved.</center></h2>
+  *
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -29,12 +43,16 @@
 #define HAL_FLASH_MODULE_ENABLED   
 #define HAL_GPIO_MODULE_ENABLED    
 /* #define HAL_IWDG_MODULE_ENABLED */
+/* #define HAL_WWDG_MODULE_ENABLED */
 /* #define HAL_TIM_MODULE_ENABLED */
+#define HAL_DMA_MODULE_ENABLED
 /* #define HAL_LPTIM_MODULE_ENABLED */
 #define HAL_PWR_MODULE_ENABLED
 /* #define HAL_I2C_MODULE_ENABLED */
-/* #define HAL_UART_MODULE_ENABLED  */
+/* #define HAL_UART_MODULE_ENABLED */
 /* #define HAL_SPI_MODULE_ENABLED */
+/* #define HAL_RTC_MODULE_ENABLED */
+/* #define HAL_LED_MODULE_ENABLED */
 /* #define HAL_EXTI_MODULE_ENABLED */
 #define HAL_CORTEX_MODULE_ENABLED  
 
@@ -125,6 +143,10 @@
  #include "py32f0xx_hal_cortex.h"
 #endif /* HAL_CORTEX_MODULE_ENABLED */
 
+#ifdef HAL_DMA_MODULE_ENABLED
+  #include "py32f0xx_hal_dma.h"
+#endif /* HAL_DMA_MODULE_ENABLED */
+
 #ifdef HAL_ADC_MODULE_ENABLED
  #include "py32f0xx_hal_adc.h"
 #endif /* HAL_ADC_MODULE_ENABLED */
@@ -153,6 +175,10 @@
  #include "py32f0xx_hal_pwr.h"
 #endif /* HAL_PWR_MODULE_ENABLED */
 
+#ifdef HAL_RTC_MODULE_ENABLED
+ #include "py32f0xx_hal_rtc.h"
+#endif /* HAL_RTC_MODULE_ENABLED */    
+
 #ifdef HAL_SPI_MODULE_ENABLED
  #include "py32f0xx_hal_spi.h"
 #endif /* HAL_SPI_MODULE_ENABLED */
@@ -168,6 +194,14 @@
 #ifdef HAL_UART_MODULE_ENABLED
  #include "py32f0xx_hal_uart.h"
 #endif /* HAL_UART_MODULE_ENABLED */
+
+#ifdef HAL_WWDG_MODULE_ENABLED
+ #include "py32f0xx_hal_wwdg.h"
+#endif /* HAL_WWDG_MODULE_ENABLED */
+
+#ifdef HAL_LED_MODULE_ENABLED
+ #include "py32f0xx_hal_led.h"
+#endif /* HAL_LED_MODULE_ENABLED */
 
 #ifdef HAL_USART_MODULE_ENABLED
  #include "py32f0xx_hal_usart.h"
