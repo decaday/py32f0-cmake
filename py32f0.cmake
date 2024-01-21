@@ -28,8 +28,8 @@ set(USE_PYOCD ON)
 set(PYOCD_PATH pyocd)
 
 
-include_directories(Src)
-file(GLOB_RECURSE USER_SOURCES Src/*)
+include_directories(App)
+file(GLOB_RECURSE USER_SOURCES App/*)
 
 
 

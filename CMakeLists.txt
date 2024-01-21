@@ -6,6 +6,9 @@ include(py32f0.cmake)
 set(MCU_LOWER $<LOWER_CASE:${MCU_MODEL}>)
 
 
+
+
+# HALs
 if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
     if("${USE_HAL_OR_LL}" STREQUAL "HAL")
         FILE(GLOB LIB_SOURCES Drivers/PY32F0xx_HAL_Driver/Src/*)
@@ -18,16 +21,26 @@ if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
     else()
         message(FATAL_ERROR "Wrong setting: USE_HAL_OR_LL ${USE_HAL_OR_LL}")
     endif()
-
 elseif()
 endif()
 
 
+# Startup file
+if("${MCU_MODEL}" MATCHES "PY32F002A")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f002a.s)
+elseif("${MCU_MODEL}" MATCHES "PY32F003")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f003.s)
+elseif("${MCU_MODEL}" MATCHES "PY32F030")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f030.s)
+elseif("${MCU_MODEL}" MATCHES "PY32F002B")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f002b.s)
+
+
+endif()
+list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/arm/startup_${MCU_LOWER}.s)
+
 # ld_script
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
-
-# Startup file
-list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/arm/startup_${MCU_LOWER}.s)
 
 # system_py32f0xx.c
 list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
@@ -36,11 +49,15 @@ list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
 list(APPEND SOURCES ${USER_SOURSES})
 
 include_directories(
-        Drivers/CMSIS/Core/Include
+        Drivers/CMSIS/Include
         Drivers/CMSIS/Device/PY32F0xx/Include
         ${INCLUDE_DIRS}
 )
+message(STATUS "Maximum optimization for speed")
 
+add_definitions(-DDEBUG
+        -DUSE_HAL_DRIVER
+        -D${MCU_MODEL})
 
 
 # specify cross-compilers and tools
