@@ -9,18 +9,26 @@ cmake_minimum_required(VERSION 3.25)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
-
 # Use HAL lib or LL lib
-set(USE_HAL_OR_LL HAL)
+set(USE_HAL_OR_LL LL)
 
 
+
+
+# MCU:
+#   PY32F002Ax5
+#   PY32F002Bx5
+#   PY32F003x4, PY32F003x6, PY32F003x8
+#   PY32F030x4, PY32F030x6, PY32F030x7, PY32F030x8
 set(MCU_MODEL PY32F030x6)
 
 
 # Enable printf float %f support
-set(ENABLE_PRINTF_FLOAT ON)
+# seems need 20KB Flash, 0.8KB RAM!
+set(ENABLE_PRINTF_FLOAT OFF)
+
 # Build with CMSIS DSP functions
-set(USE_DSP ON)
+set(USE_DSP OFF)
 # Enable auto generation of Misc/pyocd.yaml if needed
 set(AUTO_GENERATE_PYOCD_YAML ON)
 

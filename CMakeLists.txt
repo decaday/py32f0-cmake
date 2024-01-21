@@ -22,9 +22,26 @@ if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
         list(APPEND SOURCES ${LIB_SOURCES})
         list(APPEND INCLUDE_DIRS Drivers/PY32F0xx_HAL_Driver/Inc)
     elseif("${USE_HAL_OR_LL}" STREQUAL "LL")
-        FILE(GLOB LIB_SOURCES Libraries/PY32F0xx_LL_Driver/Src/*)
+        FILE(GLOB LIB_SOURCES Drivers/PY32F0xx_LL_Driver/Src/*)
         list(APPEND SOURCES ${LIB_SOURCES})
-        list(APPEND INCLUDE_DIRS Drivers/PY32F0xx_HAL_Driver/Inc)
+        list(APPEND INCLUDE_DIRS Drivers/PY32F0xx_LL_Driver/Inc)
+    else()
+        message(FATAL_ERROR "Wrong setting: USE_HAL_OR_LL ${USE_HAL_OR_LL}")
+    endif()
+elseif()
+endif()
+
+message(STATUS "FILE ${INCLUDE_DIRS}")
+
+if("${MCU_MODEL}" MATCHES "PY32F002B")
+    if("${USE_HAL_OR_LL}" STREQUAL "HAL")
+        FILE(GLOB LIB_SOURCES Drivers/PY32F002B_HAL_Driver/Src/*)
+        list(APPEND SOURCES ${LIB_SOURCES})
+        list(APPEND INCLUDE_DIRS Drivers/PY32F002B_HAL_Driver/Inc)
+    elseif("${USE_HAL_OR_LL}" STREQUAL "LL")
+        FILE(GLOB LIB_SOURCES Drivers/PY32F002B_LL_Driver/Src/*)
+        list(APPEND SOURCES ${LIB_SOURCES})
+        list(APPEND INCLUDE_DIRS Drivers/PY32F002B_LL_Driver/Inc)
     else()
         message(FATAL_ERROR "Wrong setting: USE_HAL_OR_LL ${USE_HAL_OR_LL}")
     endif()
@@ -61,7 +78,6 @@ include_directories(
 message(STATUS "Maximum optimization for speed")
 
 add_definitions(-DDEBUG
-        -DUSE_HAL_DRIVER
         -D${MCU_MODEL}
         )
 
