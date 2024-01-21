@@ -9,6 +9,10 @@ include(py32f0.cmake)
 set(MCU_LOWER $<LOWER_CASE:${MCU_MODEL}>)
 
 
+if(USE_DSP)
+    add_subdirectory(Drivers/CMSIS/DSP_Lib/Source)
+    add_definitions(-DARM_MATH_CM0PLUS)
+endif()
 
 
 # HALs
@@ -137,6 +141,10 @@ add_link_options(-mcpu=cortex-m0plus -mthumb -mthumb-interwork)
 add_link_options(-T ${LINKER_SCRIPT})
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+
+if(USE_DSP)
+    target_link_libraries(${PROJECT_NAME}.elf PRIVATE CMSISDSP)
+endif()
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)

@@ -7,6 +7,7 @@
   */
 
 #include "main.h"
+#include "arm_math.h"
 
 static void APP_SystemClockConfig(void);
 static void APP_GPIO_Config(void);
@@ -19,6 +20,7 @@ int main(void)
     APP_GPIO_Config();
     //BSP_USART_Config();
     //printf("PY32F0xx LED Toggle Demo\r\nSystem Clock: %ld\r\n", SystemCoreClock);
+    arm_pid_init_f32(12,12);
 
     while (1)
     {
