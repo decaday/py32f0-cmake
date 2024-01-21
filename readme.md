@@ -28,7 +28,7 @@ GCC startup and ldscript are from [IOsetting/py32f0-template](https://github.com
 
 ### ---PY32F07x Series---(TODO)
 
-**Puya** PY32F040, PY32F071, PY32F072
+**Puya** PY32F040, PY32F(M)070*, PY32F071, PY32F072
 
 
 
@@ -111,6 +111,8 @@ Please download and install PyOCD.
 
 <img src="Docs/Images/image-20240121211434382.png" alt="image-20240121211434382" style="zoom: 80%;" />
 
+You can keep the default settings for now. Later on, we will configure the target ourselves.(Misc/pyocd.yaml)
+
 <img src="Docs/Images/image-20240121211527071.png" alt="image-20240121211527071" style="zoom:80%;" />
 
 <img src="Docs/Images/image-20240121211613733.png" alt="image-20240121211613733" style="zoom:80%;" />
@@ -123,7 +125,11 @@ gdbserver -p 33462 --config Misc\pyocd.yaml
 
 TODO
 
+### 6.Use Examples
 
+Examples provided by Puya are all based on the Keil MDK, and some time is needed to organize them.
+
+TODO
 
 ## Compilation Reference Size
 
