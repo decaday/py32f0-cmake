@@ -8,6 +8,9 @@ include(py32f0.cmake)
 
 set(MCU_LOWER $<LOWER_CASE:${MCU_MODEL}>)
 
+
+
+
 # HALs
 if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
     if("${USE_HAL_OR_LL}" STREQUAL "HAL")
@@ -43,7 +46,6 @@ set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
 # system_py32f0xx.c
 list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
 
-
 list(APPEND SOURCES ${USER_SOURCES})
 
 include_directories(
@@ -58,6 +60,14 @@ add_definitions(-DDEBUG
         -DUSE_HAL_DRIVER
         -D${MCU_MODEL}
         )
+
+
+# auto generate pyocd.yaml
+if(AUTO_GENERATE_PYOCD_YAML)
+    set(PYOCD_CONENT "target_override: ${MCU_MODEL}\npack: Misc/Puya.PY32F0xx_DFP.1.1.9.pack\nfrequency: 1000000")
+    file(WRITE Misc/pyocd.yaml ${PYOCD_CONENT})
+endif()
+
 
 
 
@@ -117,7 +127,9 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-
+if(ENABLE_PRINTF_FLOAT)
+    add_link_options(-u _printf_float)
+endif ()
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
 add_link_options(-specs=nano.specs -specs=nosys.specs -static -lc -lm)
 add_link_options(-Wl,--no-warn-rwx-segments)

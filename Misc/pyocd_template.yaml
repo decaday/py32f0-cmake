@@ -1,0 +1,6 @@
+target_override: PY32F030x6
+pack: Misc/Puya.PY32F0xx_DFP.1.1.9.pack
+frequency: 1000000 # 100K
+
+# more options please see https://pyocd.io/docs/options.html
+# PY32F002/003/030 series may cant debug in a high frequency

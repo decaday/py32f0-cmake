@@ -18,13 +18,11 @@ set(MCU_MODEL PY32F030x6)
 
 
 # Enable printf float %f support
-set(ENABLE_PRINTF_FLOAT OFF)
+set(ENABLE_PRINTF_FLOAT ON)
 # Build with CMSIS DSP functions
-set(USE_DSP OFF)
-# If debug and flash with PYOCD
-set(USE_PYOCD ON)
-# path to PyOCD
-set(PYOCD_PATH pyocd)
+set(USE_DSP ON)
+# Enable auto generation of Misc/pyocd.yaml if needed
+set(AUTO_GENERATE_PYOCD_YAML ON)
 
 
 include_directories(App)
