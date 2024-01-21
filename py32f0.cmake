@@ -6,7 +6,6 @@ cmake_minimum_required(VERSION 3.25)
 # set(GCC_PATH "C:/path/to/your/arm-none-eabi-gcc/bin")
 
 # project settings
-project(stm32g0 C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
@@ -29,10 +28,4 @@ set(PYOCD_PATH pyocd)
 
 
 include_directories(App)
-file(GLOB_RECURSE USER_SOURCES App/*)
-
-
-
-add_definitions(
-        -DUSE_HAL_DRIVER
-)
+FILE(GLOB_RECURSE USER_SOURCES App/*.c)

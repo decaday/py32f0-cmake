@@ -1,12 +1,12 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.25)
-project(py32_cmake_template C)
 
+project(py32_cmake_template C CXX ASM)
 include(py32f0.cmake)
 
+
 set(MCU_LOWER $<LOWER_CASE:${MCU_MODEL}>)
-
-
-
 
 # HALs
 if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
@@ -35,9 +35,7 @@ elseif("${MCU_MODEL}" MATCHES "PY32F030")
 elseif("${MCU_MODEL}" MATCHES "PY32F002B")
     list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f002b.s)
 
-
 endif()
-list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/arm/startup_${MCU_LOWER}.s)
 
 # ld_script
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
@@ -46,18 +44,22 @@ set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
 list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
 
 
-list(APPEND SOURCES ${USER_SOURSES})
+list(APPEND SOURCES ${USER_SOURCES})
 
 include_directories(
         Drivers/CMSIS/Include
         Drivers/CMSIS/Device/PY32F0xx/Include
         ${INCLUDE_DIRS}
-)
+        )
+
 message(STATUS "Maximum optimization for speed")
 
 add_definitions(-DDEBUG
         -DUSE_HAL_DRIVER
-        -D${MCU_MODEL})
+        -D${MCU_MODEL}
+        )
+
+
 
 
 # specify cross-compilers and tools
@@ -88,10 +90,6 @@ else ()
     set(CMAKE_OBJDUMP arm-none-eabi-objdump)
     set(SIZE arm-none-eabi-size)
 endif ()
-
-
-add_executable(py32_cmake_template ${SOURCES} ${LINKER_SCRIPT})
-
 
 #Uncomment for software floating point
 #add_compile_options(-mfloat-abi=soft)
