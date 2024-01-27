@@ -127,9 +127,7 @@ TODO
 
 ### 6.Use Examples
 
-Examples provided by Puya are all based on the Keil MDK, and some time is needed to organize them.
-
-TODO
+The examples are under ‘Drivers/Examples’. You need to copy the files to the outside to run and debug. These examples are from Puya, using scripts to delete the MDK project related files. You may need to make slight modifications to run normally.
 
 ## Compilation Reference Size
 
