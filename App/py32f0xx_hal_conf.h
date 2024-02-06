@@ -37,25 +37,25 @@
   */
 #define HAL_MODULE_ENABLED  
 #define HAL_RCC_MODULE_ENABLED
-/* #define HAL_ADC_MODULE_ENABLED */
-/* #define HAL_CRC_MODULE_ENABLED */
-/* #define HAL_COMP_MODULE_ENABLED */
+/* #define HAL_ADC_MODULE_ENABLED */   
+/* #define HAL_CRC_MODULE_ENABLED */   
+/* #define HAL_COMP_MODULE_ENABLED */  
 #define HAL_FLASH_MODULE_ENABLED   
 #define HAL_GPIO_MODULE_ENABLED    
-/* #define HAL_IWDG_MODULE_ENABLED */
-/* #define HAL_WWDG_MODULE_ENABLED */
+/* #define HAL_IWDG_MODULE_ENABLED */  
+/* #define HAL_WWDG_MODULE_ENABLED */ 
 /* #define HAL_TIM_MODULE_ENABLED */
 #define HAL_DMA_MODULE_ENABLED
-/* #define HAL_LPTIM_MODULE_ENABLED */
+/* #define HAL_LPTIM_MODULE_ENABLED */  
 #define HAL_PWR_MODULE_ENABLED
-/* #define HAL_I2C_MODULE_ENABLED */
-/* #define HAL_UART_MODULE_ENABLED */
-/* #define HAL_SPI_MODULE_ENABLED */
-/* #define HAL_RTC_MODULE_ENABLED */
-/* #define HAL_LED_MODULE_ENABLED */
+/* #define HAL_I2C_MODULE_ENABLED */ 
+#define HAL_UART_MODULE_ENABLED 
+/* #define HAL_SPI_MODULE_ENABLED */  
+/* #define HAL_RTC_MODULE_ENABLED */   
+/* #define HAL_LED_MODULE_ENABLED */ 
 /* #define HAL_EXTI_MODULE_ENABLED */
-#define HAL_CORTEX_MODULE_ENABLED  
-
+#define HAL_CORTEX_MODULE_ENABLED
+  
 /* ########################## Oscillator Values adaptation ####################*/
 
 #if !defined  (HSI_VALUE) 
@@ -80,8 +80,8 @@
 #if !defined  (LSI_VALUE) 
  #define LSI_VALUE               ((uint32_t)32768)    /*!< LSI Typical Value in Hz */
 #endif /* LSI_VALUE */                                /*!< Value of the Internal Low Speed oscillator in Hz
-                                                      The real value may vary depending on the variations
-                                                      in voltage and temperature. */
+                                                       The real value may vary depending on the variations
+                                                       in voltage and temperature. */
 
 /**
   * @brief Adjust the value of External Low Speed oscillator (LSE) used in your application.

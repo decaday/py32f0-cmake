@@ -19,17 +19,14 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 
 /* Private define ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private user code ---------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static void APP_SystemClockConfig(void);
 static void APP_GpioConfig(void);
 
 /**
@@ -38,71 +35,39 @@ static void APP_GpioConfig(void);
   */
 int main(void)
 {
-  /* 配置系统时钟 */
-  APP_SystemClockConfig();
-
-  /* 配置LED引脚 */
+  /* 初始化所有外设，Flash接口，SysTick */
+  HAL_Init();                                  
+  
+  /* 初始化GPIO */
   APP_GpioConfig();
-
-  /* LED灭*/
-  LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_11);
 
   while (1)
   {
-    /* LED灯闪烁 */
-    LL_mDelay(100);
-    LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_11);
+    /* 延时250ms */
+    HAL_Delay(250);   
+
+    /* LED翻转 */
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_11);    
   }
 }
 
 /**
-  * @brief  系统时钟配置函数
-  * @param  无
-  * @retval 无
-  */
-static void APP_SystemClockConfig(void)
-{
-  /* 使能HSI */
-  LL_RCC_HSI_Enable();
-  while(LL_RCC_HSI_IsReady() != 1)
-  {
-  }
-
-  /* 设置 AHB 分频*/
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
-
-  /* 配置HSISYS作为系统时钟源 */
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_HSISYS);
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_HSISYS)
-  {
-  }
-
-  /* 设置 APB1 分频*/
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_1);
-  LL_Init1msTick(8000000);
-
-  /* 更新系统时钟全局变量SystemCoreClock(也可以通过调用SystemCoreClockUpdate函数更新) */
-  LL_SetSystemCoreClock(8000000);
-}
-
-/**
-  * @brief  GPIO配置函数
+  * @brief  GPIO配置
   * @param  无
   * @retval 无
   */
 static void APP_GpioConfig(void)
 {
-  /* 使能时钟 */
-  LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_GPIOA);
+  GPIO_InitTypeDef  GPIO_InitStruct;
 
-  /* 将PA11引脚配置为输出 */
-  LL_GPIO_SetPinMode(GPIOA, LL_GPIO_PIN_11, LL_GPIO_MODE_OUTPUT);
-  /* 默认（复位后）为推挽输出 */
-  /* LL_GPIO_SetPinOutputType(GPIOA, LL_GPIO_PIN_11, LL_GPIO_OUTPUT_PUSHPULL); */
-  /* 默认（复位后）是非常低的输出速度 */
-  /* LL_GPIO_SetPinSpeed(GPIOA, LL_GPIO_PIN_11, LL_GPIO_SPEED_FREQ_LOW); */
-  /* 默认（复位后）为无上拉 */
-  /* LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_11, LL_GPIO_PULL_NO); */
+  __HAL_RCC_GPIOA_CLK_ENABLE();                          /* 使能GPIOA时钟 */
+
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;            /* 推挽输出 */
+  GPIO_InitStruct.Pull = GPIO_PULLUP;                    /* 使能上拉 */
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;          /* GPIO速度 */  
+  /* GPIO初始化 */
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);                
 }
 
 /**
@@ -112,7 +77,6 @@ static void APP_GpioConfig(void)
   */
 void APP_ErrorHandler(void)
 {
-  /* 无限循环 */
   while (1)
   {
   }

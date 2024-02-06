@@ -32,12 +32,10 @@
 /* External functions --------------------------------------------------------*/
 
 /**
-  * @brief init MSP
+  * @brief 初始化全局MSP
   */
 void HAL_MspInit(void)
 {
-    __HAL_RCC_SYSCFG_CLK_ENABLE();
-    __HAL_RCC_PWR_CLK_ENABLE();
 }
 
 /************************ (C) COPYRIGHT Puya *****END OF FILE******************/
