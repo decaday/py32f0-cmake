@@ -47,7 +47,7 @@ Choose the appropriate package for your system and add `bin` to your environment
 #### 2. Clone this template project
 
 ```
-Copy Codegit clone --recursive https://github.com/decaday/py32f0_cmake_template.git
+git clone --recursive https://github.com/decaday/py32f0_cmake_template.git
 ```
 
 This repo has a submodule, so you need to add `--recursive`.
@@ -131,12 +131,21 @@ The examples are under ‘Drivers/Examples’. You need to copy the files to the
 
 ## Compilation Reference Size
 
-| MCU   | Project       | RAM    | FLASH  |
-| ----- | ------------- | ------ | ------ |
-| F030  | HAL Blink     | 1584 B | 3860 B |
-| F002B | HAL Blink     | 816B   | 3280 B |
-| F030  | LL Toggle Pin | 1568B  | 1156 B |
-|       |               |        |        |
+| Compiler        | MCU   | Project        | RAM     | FLASH   |
+| --------------- | ----- | -------------- | ------- | ------- |
+| GCC -Og -g      | F030  | HAL Toggle Pin | 1584 B  | 1720 B  |
+| GCC -Og -g      | F030  | LL Toggle Pin  | 1568 B  | 1156 B  |
+| GCC -Og -g      | F002B | HAL Toggle Pin | 816 B   | 1736 B  |
+| GCC -O1         | F030  | HAL Toggle Pin | 1584 B  | 1692 B  |
+| MDK ARMCC6  -O1 | F030  | HAL Toggle Pin | 1240 B* | 1448 B* |
+| MDK ARMCC6  -O1 | F030  | LL Toggle Pin  | 1224 B* | 912 B*  |
+|                 |       |                |         |         |
+
+*RAM = ZI-data + RW-data
+
+*Flash = Code + RO-data + RW-data
+
+**GCC**:12.2mpacbti-rel1    **ARMCC**:v6.19
 
 ## Puya Naming Instructions
 

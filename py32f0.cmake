@@ -10,9 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
 # Use HAL lib or LL lib
-set(USE_HAL_OR_LL LL)
-
-
+set(USE_HAL_OR_LL HAL)
 
 
 # MCU:

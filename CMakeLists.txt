@@ -75,8 +75,6 @@ include_directories(
         ${INCLUDE_DIRS}
         )
 
-message(STATUS "Maximum optimization for speed")
-
 add_definitions(-DDEBUG
         -D${MCU_MODEL}
         )
