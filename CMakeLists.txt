@@ -17,6 +17,8 @@ endif()
 
 # HALs
 if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
+
     if("${USE_HAL_OR_LL}" STREQUAL "HAL")
         FILE(GLOB LIB_SOURCES Drivers/PY32F0xx_HAL_Driver/Src/*)
         list(APPEND SOURCES ${LIB_SOURCES})
@@ -34,6 +36,8 @@ endif()
 message(STATUS "FILE ${INCLUDE_DIRS}")
 
 if("${MCU_MODEL}" MATCHES "PY32F002B")
+    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f002b.c)
+
     if("${USE_HAL_OR_LL}" STREQUAL "HAL")
         FILE(GLOB LIB_SOURCES Drivers/PY32F002B_HAL_Driver/Src/*)
         list(APPEND SOURCES ${LIB_SOURCES})
@@ -64,8 +68,6 @@ endif()
 # ld_script
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
 
-# system_py32f0xx.c
-list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
 
 list(APPEND SOURCES ${USER_SOURCES})
 
