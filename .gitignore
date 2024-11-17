@@ -1,7 +1,11 @@
 .vscode/
 .idea/
 
-Temp/
 cmake-build-debug/
 build/
+.cmake/
+CMakeCache.txt
+CMakeFiles/
+
+Temp/
 /Misc/pyocd.yaml

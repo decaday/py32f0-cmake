@@ -32,28 +32,37 @@ else ()
 endif ()
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
-project(py32-cmake C CXX ASM)
-include(py32f0.cmake)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 11)
 
+project(py32-cmake C CXX ASM)
+
+# override options
+set(ENABLE_HAL_DRIVER ON CACHE BOOL "Enable HAL driver")
+set(ENABLE_LL_DRIVER OFF CACHE BOOL "Enable LL driver")
+set(ENABLE_SYSTEM_XXX_C ON CACHE BOOL "Enable system_XXX.c")
+set(ENABLE_STARTUP_FILE ON CACHE BOOL "Enable startup file")
+set(ENABLE_LD_SCRIPT ON CACHE BOOL "Enable linker script")
+set(ENABLE_DEBUG_DEFINE ON CACHE BOOL "Enable debug define")
+set(MCU_MODEL "PY32F030x6" CACHE STRING "MCU model, like PY32F030x6")
 add_subdirectory(Drivers)
 
+set(AUTO_GENERATE_PYOCD_YAML ON)
+
 add_executable(${PROJECT_NAME}.elf)
+
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE drivers)
 
 file(GLOB SOURCES ${CMAKE_CURRENT_LIST_DIR}/App/*.c)
-
 target_sources(${PROJECT_NAME}.elf
     PRIVATE
     ${SOURCES}
 )
-
 target_include_directories(${PROJECT_NAME}.elf
     PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/App
 )
 
-#Uncomment for software floating point
-#add_compile_options(-mfloat-abi=soft)
 
 target_compile_options(${PROJECT_NAME}.elf
     PRIVATE
@@ -87,11 +96,9 @@ target_link_options(${PROJECT_NAME}.elf
     -Wl,--no-warn-rwx-segments
 )
 
-if(ENABLE_PRINTF_FLOAT)
-    target_link_options(${PROJECT_NAME}.elf PRIVATE -u _printf_float)
-endif()
-
-# add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+# printf float
+# seems need 20KB Flash, 0.8KB RAM!
+# target_link_options(${PROJECT_NAME}.elf PRIVATE -u _printf_float)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
