@@ -52,32 +52,22 @@ git clone --recursive https://github.com/decaday/py32f0_cmake_template.git
 
 This repo has a submodule, so you need to add `--recursive`.
 
-### 3. Edit the py32f0.cmake file.
+### 3. Edit CmakeLists.txt
+
+For convenience, the configuration is done using an overriding method here.
+
 
 ```cmake
-# project settings
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
-# Use HAL lib or LL lib
-set(USE_HAL_OR_LL LL)
-
-# MCU:
-#   PY32F002Ax5
-#   PY32F002Bx5
-#   PY32F003x4, PY32F003x6, PY32F003x8
-#   PY32F030x4, PY32F030x6, PY32F030x7, PY32F030x8
-set(MCU_MODEL PY32F030x6)
-
-# Enable printf float %f support
-set(ENABLE_PRINTF_FLOAT OFF)
-
-# Build with CMSIS DSP functions
-set(USE_DSP OFF)
-
-# Enable auto generation of Misc/pyocd.yaml if needed
-set(AUTO_GENERATE_PYOCD_YAML ON)
+set(ENABLE_HAL_DRIVER ON CACHE BOOL "Enable HAL driver")
+set(ENABLE_LL_DRIVER OFF CACHE BOOL "Enable LL driver")
+set(ENABLE_SYSTEM_XXX_C ON CACHE BOOL "Enable system_XXX.c")
+set(ENABLE_STARTUP_FILE ON CACHE BOOL "Enable startup file")
+set(ENABLE_LD_SCRIPT ON CACHE BOOL "Enable linker script")
+set(ENABLE_DEBUG_DEFINE ON CACHE BOOL "Enable debug define")
+set(MCU_MODEL "PY32F030x6" CACHE STRING "MCU model, like PY32F030x6")
 ```
+
+You can also delete these lines, modify the CMakeCache.txt file, or use GUI tools or an IDE to configure these settings.
 
 #### Set MCU_MODEL
 
@@ -88,6 +78,15 @@ Puya's MCU naming can be a bit cumbersome, for example, `PY32F002AF15P6TU`.
 Therefore, you need to choose PY32F002Ax5.
 
 If you are using AIR001, you can choose PY32F030x6. If you are using XL32, please choose the appropriate settings based on the core and flash size.
+
+Below are all the supported MCU models:
+
+```
+PY32F002Ax5
+PY32F002Bx5
+PY32F003x4, PY32F003x6, PY32F003x8
+PY32F030x4, PY32F030x6, PY32F030x7, PY32F030x8
+```
 
 #### AUTO_GENERATE_PYOCD_YAML
 
