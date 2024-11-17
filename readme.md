@@ -100,29 +100,24 @@ You can use IDEs like VSCode, CLion, or compile from the command line.
 
 Puya has several ISP tools and official debuggers. You can find some information about them here: [decaday/PY32_Docs](https://github.com/decaday/PY32_Docs). However, in reality, we can use a regular DAPlink. I don't have STlink or Jlink, but contributions to the documentation are welcome.
 
-I recommend using [PyOCD](https://pyocd.io/) as it supports MDK PACK.
+You can use the following tools for debugging:
 
-Please download and install PyOCD.
+#### 1. **OpenOCD (Modified Version by Puya)**
+The Py32-specific version of OpenOCD can be found in the GCC support package on the Puya official website.
 
-#### Clion PyOCD Configure
+- **CLion**: OpenOCD is supported natively.
+- **VSCode**: Use the Cortex-Debug extension to work with OpenOCD.
 
-<img src="Docs/Images/image-20240121211255909.png" alt="image-20240121211255909" style="zoom: 80%;" />
+#### 2. **probe-rs**
+probe-rs supports Py32 and can be used within VSCode for debugging.
 
-<img src="Docs/Images/image-20240121211434382.png" alt="image-20240121211434382" style="zoom: 80%;" />
+#### 3. **PyOCD with CMSIS Pack**
+   - **CLion**: PyOCD is supported; you can refer to [Clion PyOCD Configure](Docs/Docs\debug-clion-pyocd.md).
+   - **VSCode**: Use the Cortex-Debug extension to work with PyOCD.
 
-You can keep the default settings for now. Later on, we will configure the target ourselves.(Misc/pyocd.yaml)
+   **Note**: While using PyOCD for debugging Py32, I often encounter inexplicable issues, such as: Breakpoints not being hit. Random hard faults after powering on.
 
-<img src="Docs/Images/image-20240121211527071.png" alt="image-20240121211527071" style="zoom:80%;" />
-
-<img src="Docs/Images/image-20240121211613733.png" alt="image-20240121211613733" style="zoom:80%;" />
-
-```
-gdbserver -p 33462 --config Misc\pyocd.yaml
-```
-
-#### VSCode Pyocd Configure
-
-TODO
+   If you face similar issues, consider trying another debugging tool.
 
 ### 6.Use Examples
 
