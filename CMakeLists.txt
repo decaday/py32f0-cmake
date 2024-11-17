@@ -85,6 +85,9 @@ target_compile_options(${PROJECT_NAME}.elf PRIVATE
 
 target_link_options(${PROJECT_NAME}.elf
     PRIVATE
+    -mcpu=cortex-m0plus 
+    -mthumb 
+    -mthumb-interwork
     -Wl,-gc-sections
     -Wl,--print-memory-usage
     -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map
