@@ -3,4 +3,5 @@
 
 Temp/
 cmake-build-debug/
+build/
 /Misc/pyocd.yaml

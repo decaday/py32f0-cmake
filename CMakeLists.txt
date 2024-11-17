@@ -1,96 +1,6 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
-cmake_minimum_required(VERSION 3.25)
-
-project(py32_cmake_template C CXX ASM)
-include(py32f0.cmake)
-
-
-set(MCU_LOWER $<LOWER_CASE:${MCU_MODEL}>)
-
-
-if(USE_DSP)
-    add_subdirectory(Drivers/CMSIS/DSP_Lib/Source)
-    add_definitions(-DARM_MATH_CM0PLUS)
-endif()
-
-
-# HALs
-if("${MCU_MODEL}" MATCHES "PY32F002A|PY32F003|PY32F030")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f0xx.c)
-
-    if("${USE_HAL_OR_LL}" STREQUAL "HAL")
-        FILE(GLOB LIB_SOURCES Drivers/PY32F0xx_HAL_Driver/Src/*)
-        list(APPEND SOURCES ${LIB_SOURCES})
-        list(APPEND INCLUDE_DIRS Drivers/PY32F0xx_HAL_Driver/Inc)
-    elseif("${USE_HAL_OR_LL}" STREQUAL "LL")
-        FILE(GLOB LIB_SOURCES Drivers/PY32F0xx_LL_Driver/Src/*)
-        list(APPEND SOURCES ${LIB_SOURCES})
-        list(APPEND INCLUDE_DIRS Drivers/PY32F0xx_LL_Driver/Inc)
-    else()
-        message(FATAL_ERROR "Wrong setting: USE_HAL_OR_LL ${USE_HAL_OR_LL}")
-    endif()
-elseif()
-endif()
-
-message(STATUS "FILE ${INCLUDE_DIRS}")
-
-if("${MCU_MODEL}" MATCHES "PY32F002B")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/system_py32f002b.c)
-
-    if("${USE_HAL_OR_LL}" STREQUAL "HAL")
-        FILE(GLOB LIB_SOURCES Drivers/PY32F002B_HAL_Driver/Src/*)
-        list(APPEND SOURCES ${LIB_SOURCES})
-        list(APPEND INCLUDE_DIRS Drivers/PY32F002B_HAL_Driver/Inc)
-    elseif("${USE_HAL_OR_LL}" STREQUAL "LL")
-        FILE(GLOB LIB_SOURCES Drivers/PY32F002B_LL_Driver/Src/*)
-        list(APPEND SOURCES ${LIB_SOURCES})
-        list(APPEND INCLUDE_DIRS Drivers/PY32F002B_LL_Driver/Inc)
-    else()
-        message(FATAL_ERROR "Wrong setting: USE_HAL_OR_LL ${USE_HAL_OR_LL}")
-    endif()
-elseif()
-endif()
-
-
-# Startup file
-if("${MCU_MODEL}" MATCHES "PY32F002A")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f002a.s)
-elseif("${MCU_MODEL}" MATCHES "PY32F003")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f003.s)
-elseif("${MCU_MODEL}" MATCHES "PY32F030")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f030.s)
-elseif("${MCU_MODEL}" MATCHES "PY32F002B")
-    list(APPEND SOURCES Drivers/CMSIS/Device/PY32F0xx/Source/gcc/startup_py32f002b.s)
-
-endif()
-
-# ld_script
-set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Drivers/LDScripts/${MCU_LOWER}.ld)
-
-
-list(APPEND SOURCES ${USER_SOURCES})
-
-include_directories(
-        Drivers/CMSIS/Include
-        Drivers/CMSIS/Device/PY32F0xx/Include
-        ${INCLUDE_DIRS}
-        )
-
-add_definitions(-DDEBUG
-        -D${MCU_MODEL}
-        )
-
-
-# auto generate pyocd.yaml
-if(AUTO_GENERATE_PYOCD_YAML)
-    set(PYOCD_CONENT "target_override: ${MCU_MODEL}\npack: Misc/Puya.PY32F0xx_DFP.1.1.9.pack\nfrequency: 1000000")
-    file(WRITE Misc/pyocd.yaml ${PYOCD_CONENT})
-endif()
-
-
-
-
+cmake_minimum_required(VERSION 3.21)
 
 # specify cross-compilers and tools
 if (GCC_PATH)
@@ -120,47 +30,68 @@ else ()
     set(CMAKE_OBJDUMP arm-none-eabi-objdump)
     set(SIZE arm-none-eabi-size)
 endif ()
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
+project(py32-cmake C CXX ASM)
+include(py32f0.cmake)
+
+add_subdirectory(Drivers)
+
+add_executable(${PROJECT_NAME}.elf)
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE drivers)
+
+file(GLOB SOURCES ${CMAKE_CURRENT_LIST_DIR}/App/*.c)
+
+target_sources(${PROJECT_NAME}.elf
+    PRIVATE
+    ${SOURCES}
+)
+
+target_include_directories(${PROJECT_NAME}.elf
+    PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/App
+)
 
 #Uncomment for software floating point
 #add_compile_options(-mfloat-abi=soft)
 
-add_compile_options(-mcpu=cortex-m0plus -mthumb -mthumb-interwork)
-add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-length=0)
+target_compile_options(${PROJECT_NAME}.elf
+    PRIVATE
+    -mcpu=cortex-m0plus
+    -mthumb
+    -mthumb-interwork
+    -ffunction-sections
+    -fdata-sections
+    -fno-common
+    -fmessage-length=0
+    $<$<COMPILE_LANGUAGE:ASM>:-xassembler-with-cpp>
+)
 
-# uncomment to mitigate c++17 absolute addresses warnings
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-register")
+target_compile_options(${PROJECT_NAME}.elf PRIVATE 
+    $<$<CONFIG:Release>:-Ofast>
+    $<$<CONFIG:RelWithDebInfo>:-Ofast -g>
+    $<$<CONFIG:MinSizeRel>:-Os>
+    $<$<CONFIG:Debug>:-Og -g>
+)
 
-# Enable assembler files preprocessing
-add_compile_options($<$<COMPILE_LANGUAGE:ASM>:-x$<SEMICOLON>assembler-with-cpp>)
-
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    message(STATUS "Maximum optimization for speed")
-    add_compile_options(-Ofast)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    message(STATUS "Maximum optimization for speed, debug info included")
-    add_compile_options(-Ofast -g)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    message(STATUS "Maximum optimization for size")
-    add_compile_options(-Os)
-else ()
-    message(STATUS "Minimal optimization, debug info included")
-    add_compile_options(-Og -g)
-endif ()
+target_link_options(${PROJECT_NAME}.elf
+    PRIVATE
+    -Wl,-gc-sections
+    -Wl,--print-memory-usage
+    -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map
+    -specs=nano.specs
+    -specs=nosys.specs
+    -static
+    -lc
+    -lm
+    -Wl,--no-warn-rwx-segments
+)
 
 if(ENABLE_PRINTF_FLOAT)
-    add_link_options(-u _printf_float)
-endif ()
-add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
-add_link_options(-specs=nano.specs -specs=nosys.specs -static -lc -lm)
-add_link_options(-Wl,--no-warn-rwx-segments)
-add_link_options(-mcpu=cortex-m0plus -mthumb -mthumb-interwork)
-add_link_options(-T ${LINKER_SCRIPT})
-
-add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
-
-if(USE_DSP)
-    target_link_libraries(${PROJECT_NAME}.elf PRIVATE CMSISDSP)
+    target_link_options(${PROJECT_NAME}.elf PRIVATE -u _printf_float)
 endif()
+
+# add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
@@ -170,3 +101,9 @@ add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
         COMMENT "Building ${HEX_FILE}
 Building ${BIN_FILE}")
+
+# auto generate pyocd.yaml
+if(AUTO_GENERATE_PYOCD_YAML)
+    set(PYOCD_CONENT "target_override: ${MCU_MODEL}\npack: Misc/Puya.PY32F0xx_DFP.1.1.9.pack\nfrequency: 1000000")
+    file(WRITE Misc/pyocd.yaml ${PYOCD_CONENT})
+endif()
